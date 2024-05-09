@@ -12,7 +12,7 @@ class ArxivPipeline:
     
     def run(self, query, max_results=10):
         # IDを取得
-        paper_ids = self.id_fetcher.fetch_ids(query, max_results)
+        paper_ids = self.id_fetcher.fetch_by_id(query)
         
         for paper_id in paper_ids:
             # 各IDに対してabstractを取得
@@ -33,12 +33,12 @@ class ArxivPipeline:
 if __name__ == '__main__':
     # ベースURLとデータベースのパスを設定
     base_url = "https://export.arxiv.org/api/query"
-    db_path = "path/to/your/database.db"
+    db_path = "database.db"
     
     # パイプラインのインスタンス化と実行
     pipeline = ArxivPipeline(base_url, db_path)
     try:
-        pipeline.run("machine learning", max_results=5)
+        pipeline.run("machine learning", max_results=10)
     except Exception as e:
         print(f"Error running pipeline: {e}")
     finally:

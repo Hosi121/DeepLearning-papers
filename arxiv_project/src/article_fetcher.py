@@ -13,6 +13,11 @@ class ArticleFetcher:
             return response.text
         else:
             raise Exception("Failed to fetch data from arXiv")
+   
+    def fetch_abstract(self, paper_id):
+        # arXiv APIを使用して論文のデータを取得し、抄録を抽出
+        xml_data = self.fetch_by_id(paper_id)
+        return self.parse_abstract(xml_data)
     
     def parse_abstract(self, xml_data):
         # BeautifulSoupを使用して要約を抽出
@@ -33,15 +38,16 @@ class PaperLoader:
     
     def get_papers(self):
         return self.papers
+    
+if __name__ == "__main__":
+    # インスタンス化
+    fetcher = ArticleFetcher()
+    loader = PaperLoader(fetcher)
 
-# 使い方
-fetcher = ArticleFetcher()
-loader = PaperLoader(fetcher)
+    paper_id = "1707.08567"
+    loader.load_paper(paper_id)
 
-# 論文IDを指定してロード
-loader.load_paper("1707.08567")
-papers = loader.get_papers()
-
-# 出力
-print(papers)
-
+    # 結果を表示
+    papers = loader.get_papers()
+    for paper in papers:
+        print(f"Paper ID: {paper['id']}, Abstract: {paper['abstract']}")
